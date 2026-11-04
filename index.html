@@ -3,10 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vyankatesh Sabu — Backend Engineer</title>
-<meta name="description" content="Backend engineer. I build multi-tenant systems that stay up: Spring Boot, PostgreSQL, Docker, and LLM pipelines with deterministic guardrails.">
-<meta property="og:title" content="Vyankatesh Sabu — Backend Engineer">
-<meta property="og:description" content="Multi-tenant platforms, zero-downtime deploys, and AI backends with deterministic guardrails.">
+<title>Vyankatesh Sabu — Backend &amp; Android Engineer</title>
+<meta name="description" content="Backend and Android engineer. I build multi-tenant systems that stay up, offline-first Android apps, and LLM pipelines with deterministic guardrails.">
+<meta property="og:title" content="Vyankatesh Sabu — Backend &amp; Android Engineer">
+<meta property="og:description" content="Multi-tenant platforms, zero-downtime deploys, offline-first Android apps, and AI systems with deterministic guardrails.">
+<meta property="og:url" content="https://vrsabu.in/">
+<link rel="canonical" href="https://vrsabu.in/">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,6 +70,7 @@ a{color:var(--indigo);text-decoration-thickness:1px;text-underline-offset:3px}
 .statusbar nav a{color:var(--graphite);text-decoration:none}
 .statusbar nav a:hover{color:var(--indigo)}
 @media(max-width:720px){.statusbar nav{display:none}}
+@media(max-width:420px){.statusbar .loc{display:none}}
 
 /* ---------- hero ---------- */
 .hero{padding:clamp(3rem,8vw,6rem) 0 clamp(2.5rem,6vw,4rem);
@@ -221,8 +224,8 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
 
 <div class="statusbar">
   <div class="inner">
-    <span class="avail"><span class="pulse"></span>Open to SDE internships &amp; new-grad roles</span>
-    <span>·</span><span>Nashik, IN — will relocate</span>
+    <span class="avail"><span class="pulse"></span>Open to full-time roles from mid-2027</span>
+    <span class="loc">·</span><span class="loc">Bengaluru, IN</span>
     <nav>
       <a href="#systems">Systems</a>
       <a href="#log">Experience</a>
@@ -238,9 +241,9 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
   <!-- ===== HERO ===== -->
   <div class="hero">
     <div>
-      <p class="eyebrow">Backend &amp; Distributed Systems · IIIT Nagpur '27</p>
+      <p class="eyebrow">Backend · Android · AI systems · IIIT Nagpur '27</p>
       <h1>Vyankatesh<br>Sabu
-        <span class="sub">I build <b>multi-tenant backends</b> that stay up under load — and <b>AI pipelines</b> that don't get to hallucinate.</span>
+        <span class="sub">I build <b>multi-tenant backends</b> that stay up under load, <b>Android apps</b> that work with no signal, and <b>AI pipelines</b> that don't get to hallucinate.</span>
       </h1>
       <div class="cta">
         <a class="btn" href="mailto:vrsabu545@gmail.com">Email me</a>
@@ -274,57 +277,100 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
 
   <!-- ===== SYSTEMS ===== -->
   <section id="systems">
-    <div class="shead"><h2>Systems I've built</h2><span class="count">06 / selected</span></div>
-    <p class="lede">Most of these run against real users and real messy data — production tenants, live mailboxes, hospital dietitians, and a trucking corridor between DR Congo and South Africa.</p>
+    <div class="shead"><h2>Systems I've built</h2><span class="count">12 / selected</span></div>
+    <p class="lede">Most of these run against real users and real messy data: production tenants, drivers on a border road with no signal, live mailboxes, hospital dietitians, and a trucking corridor between DR Congo and South Africa.</p>
 
     <div class="grid">
 
       <article class="card rv">
         <div class="top"><h3>Fleetcore</h3><span class="state live">In production</span></div>
-        <p>Multi-tenant fleet management platform. I own backend features and schema design end-to-end, with isolated tenant stacks running on separate deployments.</p>
-        <p class="metric">Zero-downtime blue-green releases · Redis leaky-bucket rate limiting · Flyway expand/contract migrations</p>
-        <div class="chips"><span class="chip">Spring Boot</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span><span class="chip">Docker</span><span class="chip">Traefik</span><span class="chip">Grafana</span></div>
+        <p>Multi-tenant platform running long-haul trucking fleets, with one deployment per client. I built purchase orders, a cashbook and bank ledger, fuel planning, GPS-gap recovery, border-document compliance and the auth layer.</p>
+        <p class="metric">Zero-downtime blue-green deploys I designed · posted entries locked · deny-by-default authorisation</p>
+        <div class="chips"><span class="chip">Kotlin</span><span class="chip">Spring Boot</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span><span class="chip">Docker</span><span class="chip">Traefik</span></div>
+      </article>
+
+      <article class="card rv">
+        <div class="top"><h3>FleetApp</h3><span class="state live">In production</span></div>
+        <p>Native Android app drivers use on the road: live trips, routes, documents, load and delivery photos, and earnings. Offline-first, because a driver can be without signal for hours.</p>
+        <p class="metric">Room as source of truth · WorkManager photo sync · Keystore-backed rotating sessions</p>
+        <div class="chips"><span class="chip">Kotlin</span><span class="chip">Android</span><span class="chip">Room</span><span class="chip">WorkManager</span><span class="chip">Retrofit</span></div>
       </article>
 
       <article class="card rv">
         <div class="top"><h3>Document intelligence</h3><span class="state live">In production</span></div>
-        <p>LLM extraction pipeline inside Fleetcore. Per-form-type JSONB schemas drive the extraction, a Strategy layer swaps providers, and a model registry lives in the database rather than in config.</p>
-        <p class="metric">Two-layer dedup (Redis + MinIO) · pgvector entity resolution · full parse-log audit trail</p>
-        <div class="chips"><span class="chip">Anthropic</span><span class="chip">Gemini</span><span class="chip">OpenAI</span><span class="chip">pgvector</span><span class="chip">MinIO</span></div>
+        <p>LLM pipeline inside Fleetcore that reads ten kinds of driver and truck documents (passports, licences, permits) into structured fields. One template per document type; three providers behind one interface using native structured output.</p>
+        <p class="metric">Content-addressed cache · Redis rate limiter verified under load: 11s → 0.04s</p>
+        <div class="chips"><span class="chip">Anthropic</span><span class="chip">Gemini</span><span class="chip">OpenAI</span><span class="chip">Redis</span><span class="chip">MinIO</span></div>
       </article>
 
       <article class="card rv">
-        <div class="top"><h3><a href="https://github.com/Vyankatesh-Sabu/SafeMail" target="_blank" rel="noopener">SafeMail</a></h3><span class="state shipped">Shipped</span></div>
-        <p>Event-driven pipeline that streams live mailbox events through the Gmail Watch API into phishing classification and an automated quarantine workflow.</p>
-        <p class="metric">OAuth 2.0 with AES-GCM encrypted refresh tokens — no plaintext credentials at rest</p>
-        <div class="chips"><span class="chip">Java</span><span class="chip">Spring Boot</span><span class="chip">Gmail API</span><span class="chip">Docker</span></div>
+        <div class="top"><h3>Agent harness</h3><span class="state shipped">Shipped</span></div>
+        <p>An AI agent users can ask anything about their fleet. It has no permissions of its own: it calls the platform's APIs with the user's token, and loads tool schemas on demand from a glossary of tool groups.</p>
+        <p class="metric">Designed the harness · redesigned its tools to cover more with a quarter less context</p>
+        <div class="chips"><span class="chip">Spring AI</span><span class="chip">Tool calling</span><span class="chip">Langfuse</span><span class="chip">Prompt caching</span></div>
+      </article>
+
+      <article class="card rv">
+        <div class="top"><h3>Store management</h3><span class="state shipped">Shipped</span></div>
+        <p>Multi-tenant inventory system for a fleet's depots, built in six days: append-only stock ledger, procurement with three-way invoice matching, and a full tyre lifecycle across 11 wheel positions.</p>
+        <p class="metric">150 tests against real PostgreSQL · a database and storage bucket per tenant</p>
+        <div class="chips"><span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">PostgreSQL</span><span class="chip">React</span><span class="chip">S3</span></div>
+      </article>
+
+      <article class="card rv">
+        <div class="top"><h3>Tutorial video platform</h3><span class="state shipped">Shipped</span></div>
+        <p>One admin console publishes training videos to every client's separate deployment. Clients get a webhook, pull the changes themselves, and reconcile every five minutes as a backstop.</p>
+        <p class="metric">HMAC-signed webhooks · DRM playback · storage swapped from R2 to Bunny in a day</p>
+        <div class="chips"><span class="chip">Next.js</span><span class="chip">Prisma</span><span class="chip">Kotlin</span><span class="chip">Bunny Stream</span></div>
+      </article>
+
+      <article class="card rv">
+        <div class="top"><h3><a href="https://github.com/Vyankatesh-Sabu/TrackUI" target="_blank" rel="noopener">TrackUI</a></h3><span class="state build">Launching soon</span></div>
+        <p>Blocks Instagram Reels and YouTube Shorts in real time while the rest of each app stays usable. Group screen-time challenges with friends are in progress, ahead of a launch on Indus Appstore.</p>
+        <p class="metric">AccessibilityService detection · remote config survives host-app updates without a new APK</p>
+        <div class="chips"><span class="chip">Kotlin</span><span class="chip">Compose</span><span class="chip">WorkManager</span><span class="chip">Supabase</span></div>
       </article>
 
       <article class="card rv">
         <div class="top"><h3>Diet-chart engine</h3><span class="state shipped">Shipped</span></div>
         <p>Built for a nephrology hospital, where a wrong number matters. The LLM only picks ingredients and quantities; macros are computed deterministically from IFCT and USDA datasets.</p>
         <p class="metric">±7% validation gate rejects hallucinated output before a dietitian ever sees it</p>
-        <div class="chips"><span class="chip">Spring Boot</span><span class="chip">PostgreSQL</span><span class="chip">pgvector</span><span class="chip">LLM APIs</span></div>
+        <div class="chips"><span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">PostgreSQL</span><span class="chip">pgvector</span><span class="chip">LLM APIs</span></div>
+      </article>
+
+      <article class="card rv">
+        <div class="top"><h3><a href="https://github.com/Vyankatesh-Sabu/Recon" target="_blank" rel="noopener">Recon</a></h3><span class="state shipped">Hackathon</span></div>
+        <p>Four-way finance reconciliation across orders, gateway reports, bank statements and the GL ledger, built for Razorpay's AI Finance Controller track. Deterministic matching runs first; the LLM only adjudicates what's left.</p>
+        <p class="metric">LLM as Tier-3 adjudicator, not the source of truth · natural-language Q&amp;A over results</p>
+        <div class="chips"><span class="chip">Python</span><span class="chip">LLM agents</span><span class="chip">PostgreSQL</span></div>
+      </article>
+
+      <article class="card rv">
+        <div class="top"><h3><a href="https://github.com/Vyankatesh-Sabu/SafeMail" target="_blank" rel="noopener">SafeMail</a></h3><span class="state shipped">Shipped</span></div>
+        <p>Event-driven pipeline that streams live mailbox events through the Gmail Watch API into phishing classification and an automated quarantine workflow.</p>
+        <p class="metric">OAuth 2.0 with AES-GCM encrypted refresh tokens · no plaintext credentials at rest</p>
+        <div class="chips"><span class="chip">Java</span><span class="chip">Spring Boot</span><span class="chip">Gmail API</span><span class="chip">Docker</span></div>
       </article>
 
       <article class="card rv">
         <div class="top"><h3><a href="https://github.com/Vyankatesh-Sabu/Homigo" target="_blank" rel="noopener">Homigo</a></h3><span class="state shipped">Shipped</span></div>
-        <p>Urban services marketplace with three isolated roles — customer, partner, admin — covering booking, payments and fulfilment, plus a reactive Android client.</p>
+        <p>Urban services marketplace with three isolated roles (customer, partner, admin) covering booking, payments and fulfilment, plus a reactive Android client.</p>
         <p class="metric">28+ production-ready features · JWT multi-role access control · Redis on hot read paths</p>
         <div class="chips"><span class="chip">Kotlin</span><span class="chip">Compose</span><span class="chip">Spring Boot</span><span class="chip">MongoDB</span><span class="chip">Razorpay</span></div>
       </article>
 
       <article class="card rv">
-        <div class="top"><h3>Reconciliation agent</h3><span class="state build">In progress</span></div>
-        <p>Four-way finance reconciliation across orders, gateway reports, bank statements and the GL ledger. Deterministic matching runs first; the LLM only adjudicates what's left.</p>
-        <p class="metric">LLM as Tier-3 adjudicator, not as the source of truth · natural-language Q&amp;A over results</p>
-        <div class="chips"><span class="chip">Python</span><span class="chip">LLM agents</span><span class="chip">PostgreSQL</span></div>
+        <div class="top"><h3><a href="https://github.com/Vyankatesh-Sabu/MarkMe-faculty" target="_blank" rel="noopener">MarkMe</a></h3><span class="state shipped">Shipped</span></div>
+        <p>Attendance app for college faculty, with per-student attendance trends shown on charts.</p>
+        <p class="metric">Compose + MVVM · Retrofit with JWT auth · Firebase Cloud Messaging</p>
+        <div class="chips"><span class="chip">Kotlin</span><span class="chip">Compose</span><span class="chip">Retrofit</span><span class="chip">FCM</span></div>
       </article>
 
     </div>
 
     <div class="proof">
       <div><b>N+1 → 2</b><span>Queries per list request after batch loading</span></div>
+      <div><b>11s → 0.04s</b><span>Unrelated endpoint latency after fixing a rate limiter that starved the pool</span></div>
       <div><b>86%</b><span>Android cold-start reduction at Navionyx</span></div>
       <div><b>Top 5</b><span>Nationally, Smart India Hackathon 2025</span></div>
       <div><b>300+</b><span>DSA problems · CodeChef 2★</span></div>
@@ -337,18 +383,38 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
     <div class="log">
 
       <div class="entry now rv">
-        <p class="when">MAY 2026 — PRESENT</p>
-        <h3>APAN Infotech Process (OPC) Pvt Ltd</h3>
-        <p class="role">Backend Developer Intern · Java, Spring Boot, PostgreSQL</p>
+        <p class="when">NOV 2026 — PRESENT</p>
+        <h3>Primetrace Technologies</h3>
+        <p class="role">Android Intern · Bengaluru</p>
         <ul>
-          <li>Own backend features and database schema design end-to-end for a <b>multi-tenant platform in production</b>.</li>
-          <li>Eliminated N+1 query patterns across core list endpoints via batch loading, cutting response latency.</li>
-          <li>Shipped a <b>blue-green zero-downtime deployment pipeline</b> — Docker Compose profiles, Traefik routing, graceful shutdown.</li>
-          <li>Instrumented services with Micrometer, Prometheus and Grafana, exposing <b>percentile-histogram latency</b> dashboards.</li>
-          <li>Replaced Hibernate auto-DDL with Flyway versioned migrations; enforced financial integrity at the DB layer with immutability triggers, CHECK constraints and RBAC.</li>
-          <li>Hardened APIs with Redis leaky-bucket rate limiting and tuned HikariCP pools to survive burst load.</li>
+          <li>Android engineering at an <b>AI-first consumer startup</b> behind Crafto and Kutumb, apps with <b>100M+ downloads</b> each.</li>
+        </ul>
+      </div>
+
+      <div class="entry rv">
+        <p class="when">MAY 2026 — OCT 2026</p>
+        <h3>APAN Infotech Process (OPC) Pvt Ltd · Fleetway</h3>
+        <p class="role">Backend &amp; Android Developer Intern · Kotlin, Spring Boot, PostgreSQL</p>
+        <ul>
+          <li>Built <b>FleetApp</b>, the offline-first Android driver app, and the driver-scoped API behind it, closing a hole where a rooted phone could read any driver's earnings.</li>
+          <li>Built a <b>cashbook and bank ledger</b>: posting locks, no back-dating, row-level access and contra transfers between banks and cashbooks.</li>
+          <li>Audited the fuel subsystem, replaced <b>silent zero-costing</b> with loud failures, and froze rates and route costs onto each trip.</li>
+          <li>Built an <b>LLM document pipeline</b> across three providers, with a Redis rate limiter I redesigned after load testing.</li>
+          <li>Designed the <b>zero-downtime blue-green deployment</b> and the platform's <b>AI agent harness</b>; fixed a multi-client deploy pile-up in production.</li>
+          <li>Added rotating refresh-token auth and deny-by-default authorisation; cut Docker image pushes from ~230 MB to ~6 MB per change.</li>
+          <li>Eliminated N+1 query patterns across core list endpoints via batch loading; moved schema changes to Flyway versioned migrations.</li>
         </ul>
         <p class="more"><a href="/fleetway/">Read the full story: Six Months Building Fleetcore →</a></p>
+      </div>
+
+      <div class="entry rv">
+        <p class="when">2025 — PRESENT</p>
+        <h3>Building my own products</h3>
+        <p class="role">Independent</p>
+        <ul>
+          <li><b>TrackUI</b>, a Reels and Shorts blocker with group screen-time challenges, preparing for launch on Indus Appstore.</li>
+          <li>A <b>SaaS product for the Indian market</b>, in private development. More when it launches.</li>
+        </ul>
       </div>
 
       <div class="entry rv">
@@ -358,6 +424,7 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
         <ul>
           <li>Cut application <b>cold-start time by 86%</b> through architecture refactoring and startup-path profiling.</li>
           <li>Integrated a Retrofit API layer and refactored WebView caching, reducing page-load delays by ~40%.</li>
+          <li>Shipped push notifications with custom text-to-speech voice alerts.</li>
         </ul>
       </div>
 
@@ -401,14 +468,14 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
   <section id="stack">
     <div class="shead"><h2>What I work with</h2></div>
     <div class="stack">
-      <div class="rv"><h4>Languages</h4><p>Java · Kotlin · Python · SQL · C/C++ · JavaScript</p></div>
-      <div class="rv"><h4>Backend</h4><p>Spring Boot · Spring Security · REST · JWT · Node.js · multi-tenant design · event-driven pipelines · rate limiting</p></div>
-      <div class="rv"><h4>Data</h4><p>PostgreSQL — indexing, triggers, Flyway migrations, PostGIS, pgvector · Redis · MongoDB · MySQL</p></div>
-      <div class="rv"><h4>AI integration</h4><p>Structured LLM output · deterministic validation of model output · embedding search &amp; entity resolution · multi-provider abstraction</p></div>
+      <div class="rv"><h4>Languages</h4><p>Kotlin · Java · Python · SQL · C/C++ · JavaScript / TypeScript</p></div>
+      <div class="rv"><h4>Backend</h4><p>Spring Boot · Spring Security · FastAPI · Node.js · REST · JWT &amp; rotating refresh tokens · multi-tenant design · event-driven pipelines · rate limiting</p></div>
+      <div class="rv"><h4>Data</h4><p>PostgreSQL — indexing, triggers, Flyway &amp; Alembic migrations, PostGIS, pgvector · Redis · MongoDB · MySQL</p></div>
+      <div class="rv"><h4>AI systems</h4><p>Agent harnesses &amp; tool calling · structured LLM output · deterministic validation of model output · Langfuse tracing · embedding search · multi-provider abstraction</p></div>
+      <div class="rv"><h4>Mobile</h4><p>Android · Jetpack Compose · Coroutines &amp; Flow · Room · WorkManager · Retrofit · AccessibilityService · Firebase Cloud Messaging</p></div>
+      <div class="rv"><h4>Infrastructure</h4><p>Docker · Traefik · blue-green deploys · systemd · GitHub Actions · Linux (Fedora) · MinIO / S3 · Cloudflare · AWS EC2</p></div>
       <div class="rv"><h4>Observability</h4><p>Prometheus · Grafana · Micrometer · Loki · structured logging · percentile &amp; latency metrics</p></div>
-      <div class="rv"><h4>Testing</h4><p>JUnit 5 · Mockito · Testcontainers · integration testing · coverage in CI</p></div>
-      <div class="rv"><h4>Infrastructure</h4><p>Docker · Linux (Fedora) · Traefik · GitHub Actions · AWS EC2 · MinIO · Maven · Gradle</p></div>
-      <div class="rv"><h4>Mobile</h4><p>Android · Jetpack Compose · Coroutines · Room · WorkManager · Retrofit</p></div>
+      <div class="rv"><h4>Testing &amp; workflow</h4><p>JUnit 5 · Mockito · Testcontainers · pytest against real databases · CI · AI-first development with Claude Code</p></div>
     </div>
   </section>
 
@@ -416,7 +483,7 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
   <section id="contact">
     <div class="contact">
       <div>
-        <p class="eyebrow">Currently interviewing</p>
+        <p class="eyebrow">Graduating June 2027 · open to full-time roles</p>
         <h2>Got a system that needs to stay up?</h2>
         <a class="mail" href="mailto:vrsabu545@gmail.com">vrsabu545@gmail.com</a>
       </div>
@@ -431,7 +498,7 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
   </section>
 
   <footer>
-    <span>Vyankatesh Ramprasad Sabu — Backend Engineer</span>
+    <span>Vyankatesh Ramprasad Sabu — Backend &amp; Android Engineer</span>
     <span class="mono">Built by hand. No template.</span>
   </footer>
 
