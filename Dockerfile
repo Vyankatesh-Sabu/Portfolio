@@ -1,3 +1,4 @@
 FROM nginx:alpine
-COPY index.html /usr/share/nginx/html/index.html
+COPY index.html resume.pdf /usr/share/nginx/html/
+COPY fleetway/ /usr/share/nginx/html/fleetway/
 EXPOSE 80
