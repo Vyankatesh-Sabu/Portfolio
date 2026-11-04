@@ -115,23 +115,42 @@ h1 .sub b{color:var(--ink);font-weight:600}
 .toggle button:first-child{border-radius:2px 0 0 2px}
 .toggle button:last-child{border-radius:0 2px 2px 0;border-left:0}
 .toggle button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
-.bars{padding:.9rem .9rem .5rem;display:flex;flex-direction:column;gap:3px;min-height:190px}
-.bar{display:flex;align-items:center;gap:.5rem;font-family:var(--mono);font-size:.625rem;color:var(--graphite)}
-.bar .lbl{width:5.5ch;flex:none;text-align:right}
-.bar .track{flex:1;height:9px;background:#F2F4F7;border-radius:1px;overflow:hidden}
+.legend{font-family:var(--sans);font-size:.8125rem;color:var(--graphite);padding:.75rem .9rem 0;margin:0;line-height:1.45;min-height:3.2em}
+.legend b{color:var(--ink);font-weight:600}
+.bars{position:relative;padding:.75rem .9rem .35rem;display:flex;flex-direction:column;gap:4px}
+.bar{display:flex;align-items:center;gap:.6rem;font-family:var(--mono);font-size:.625rem;color:var(--graphite);height:10px;
+  transition:height .35s ease,opacity .25s ease,margin .35s ease}
+.bar .lbl{width:4ch;flex:none;text-align:right}
+.bar .track{flex:1;height:100%;position:relative}
 .bar .fill{
-  display:block;height:100%;width:0;background:var(--amber);
-  transition:width .5s cubic-bezier(.2,.8,.2,1);transition-delay:calc(var(--i) * 45ms);
+  position:absolute;top:0;bottom:0;left:0;width:0;border-radius:1px;background:var(--amber);
+  transition:left .55s cubic-bezier(.2,.8,.2,1),width .55s cubic-bezier(.2,.8,.2,1),background .3s ease;
+  transition-delay:calc(var(--i) * 28ms);
 }
-.bar.hidden{opacity:0;height:0;overflow:hidden;margin:-1.5px 0;transition:opacity .3s ease}
-.bar.q2 .fill{background:var(--indigo)}
+.bar.list .fill{background:var(--ink)}
+.bar.hidden{opacity:0}
+.mode-after .bar .fill{background:var(--indigo)}
+.mode-after .bar.list .fill{background:var(--ink)}
+/* time area: gridlines and the response marker share the bars' coordinates */
+.lanes{position:absolute;top:.75rem;bottom:0;right:.9rem;left:calc(.9rem + 4ch + .6rem);pointer-events:none;font-family:var(--mono);font-size:.625rem;
+  background-image:linear-gradient(90deg,var(--hairline) 1px,transparent 1px);background-size:25% 100%;opacity:.7}
+.endline{position:absolute;top:0;bottom:-1.6rem;width:0;border-left:1.5px dashed var(--ink);left:0;
+  transition:left .6s cubic-bezier(.2,.8,.2,1) .25s}
+.axis{display:flex;gap:.6rem;padding:0 .9rem .7rem;font-family:var(--sans);font-size:.75rem;color:var(--graphite)}
+.axis .sp{width:4ch;flex:none;font-family:var(--mono);font-size:.625rem}
+.axis .rail{flex:1;position:relative;height:1.6rem;border-top:1px solid var(--hairline)}
+.axis .t0{position:absolute;left:0;top:.35rem}
+.axis .sent{position:absolute;top:.35rem;white-space:nowrap;color:var(--ink);font-weight:500;padding:0 .45rem;
+  transition:left .6s cubic-bezier(.2,.8,.2,1) .25s,transform .6s cubic-bezier(.2,.8,.2,1) .25s}
+.axis .sent.flip{transform:translateX(-100%)}
 .readout{
-  display:flex;gap:1.5rem;padding:.75rem .9rem;border-top:1px solid var(--hairline);
-  font-family:var(--mono);font-size:.6875rem;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;padding:.8rem .9rem;border-top:1px solid var(--hairline);
 }
-.readout div span{display:block;color:var(--graphite);font-size:.625rem;letter-spacing:.08em;text-transform:uppercase}
-.readout div b{font-size:1.05rem;font-weight:600;letter-spacing:-.02em}
-.caption{font-family:var(--mono);font-size:.6875rem;color:var(--graphite);margin-top:.75rem;line-height:1.5}
+.readout div span{display:block;color:var(--graphite);font-size:.75rem;font-family:var(--sans)}
+.readout div b{font-family:var(--mono);font-size:1.05rem;font-weight:600;letter-spacing:-.02em}
+.caption{font-size:.875rem;color:var(--graphite);margin-top:.75rem;line-height:1.5;max-width:42ch}
+.now{font-size:.9375rem;color:var(--graphite);margin:0;max-width:44ch;line-height:1.5}
+.now b{color:var(--ink);font-weight:600}
 
 /* ---------- sections ---------- */
 section{padding:clamp(3rem,7vw,5.5rem) 0;border-top:1px solid var(--hairline)}
@@ -215,7 +234,7 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
 @media (prefers-reduced-motion:reduce){
   .rv{opacity:1;transform:none;transition:none}
   .pulse{animation:none}
-  .bar .fill{transition:none}
+  .bar .fill,.bar,.endline,.axis .sent{transition:none}
   .btn:hover{transform:none}
 }
 </style>
@@ -241,7 +260,7 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
   <!-- ===== HERO ===== -->
   <div class="hero">
     <div>
-      <p class="eyebrow">Backend · Android · AI systems · IIIT Nagpur '27</p>
+      <p class="now">Android Intern at <b>Primetrace</b>, Bengaluru. Before that, backend and Android at <b>Fleetway</b>.</p>
       <h1>Vyankatesh<br>Sabu
         <span class="sub">I build <b>multi-tenant backends</b> that stay up under load, <b>Android apps</b> that work with no signal, and <b>AI pipelines</b> that don't get to hallucinate.</span>
       </h1>
@@ -255,24 +274,27 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
 
     <!-- signature element -->
     <div>
-      <div class="monitor">
+      <div class="monitor" id="monitor">
         <header>
           <span class="t">GET /vehicles</span>
-          <span class="h">db query waterfall</span>
+          <span class="h">database query timeline</span>
         </header>
-        <div class="toggle">
+        <div class="toggle" role="group" aria-label="Show the endpoint before or after the fix">
           <button id="b-before" aria-pressed="true">Before</button>
           <button id="b-after" aria-pressed="false">After batch loading</button>
         </div>
-        <div class="bars" id="bars"></div>
+        <p class="legend" id="legend" aria-live="polite"></p>
+        <div class="bars" id="bars"><div class="lanes"><span class="endline" id="endline"></span></div></div>
+        <div class="axis" aria-hidden="true"><span class="sp"></span><span class="rail"><span class="sent" id="sent">response sent</span></span></div>
         <div class="readout">
           <div><span>Queries</span><b id="r-q">13</b></div>
           <div><span>Pattern</span><b id="r-p">N + 1</b></div>
           <div><span>Latency</span><b id="r-l">high</b></div>
         </div>
       </div>
-      <p class="caption">A list endpoint I fixed in production: one query per row collapsed to two.<br>Toggle it.</p>
+      <p class="caption">A list endpoint I fixed in production. Each query used to wait for the one before it; now two queries do the whole job.</p>
     </div>
+  </div>
   </div>
 
   <!-- ===== SYSTEMS ===== -->
@@ -506,42 +528,54 @@ footer{border-top:1px solid var(--hairline);padding:1.5rem 0 2.5rem;
 
 <script>
 (function(){
-  // ---- signature: query waterfall ----
-  var BEFORE = [92,64,71,58,80,55,68,74,61,77,52,66,70];
-  var AFTER  = [88,34];
+  // ---- signature: query timeline ----
+  // Spans are [start, width] on one shared time axis (0-100), so "after" is drawn to the same scale.
+  var BEFORE = [[0,9]], t = 9.6, W = [7.1,6.4,7.6,6.8,7.3,6.2,7.0,7.8,6.5,7.2,6.9,6.6];
+  W.forEach(function(w){ BEFORE.push([t, w]); t += w + .6; });
+  var AFTER = [[0,9],[9.6,8.2]];
+  var monitor = document.getElementById('monitor');
   var barsEl = document.getElementById('bars');
+  var endline = document.getElementById('endline'), sent = document.getElementById('sent');
+  var legend = document.getElementById('legend');
   var bBefore = document.getElementById('b-before');
   var bAfter  = document.getElementById('b-after');
   var rq = document.getElementById('r-q'), rp = document.getElementById('r-p'), rl = document.getElementById('r-l');
 
-  // build max rows once, then show/hide
   var rows = [];
-  for(var i=0;i<BEFORE.length;i++){
+  for (var i = 0; i < BEFORE.length; i++){
     var d = document.createElement('div');
-    d.className = 'bar' + (i<2 ? ' q2' : '');
-    d.innerHTML = '<span class="lbl">q'+(i+1)+'</span><span class="track"><i class="fill" style="--i:'+i+'"></i></span>';
+    d.className = 'bar' + (i === 0 ? ' list' : '');
+    d.innerHTML = '<span class="lbl">q' + (i + 1) + '</span><span class="track"><i class="fill" style="--i:' + i + '"></i></span>';
     barsEl.appendChild(d);
     rows.push(d);
   }
   var fills = barsEl.querySelectorAll('.fill');
 
   function render(mode){
-    var data = mode==='after' ? AFTER : BEFORE;
-    rows.forEach(function(row,i){
-      var on = i < data.length;
-      row.classList.toggle('hidden', !on);
-      row.classList.toggle('q2', mode==='after');
-      fills[i].style.width = on ? data[i]+'%' : '0%';
+    var after = mode === 'after', data = after ? AFTER : BEFORE;
+    monitor.classList.toggle('mode-after', after);
+    rows.forEach(function(row, i){
+      var span = data[i];
+      row.classList.toggle('hidden', !span);
+      fills[i].style.left  = span ? span[0] + '%' : '0%';
+      fills[i].style.width = span ? span[1] + '%' : '0%';
     });
+    var last = data[data.length - 1], end = Math.min(last[0] + last[1], 100);
+    endline.style.left = end + '%';
+    sent.style.left = end + '%';
+    sent.classList.toggle('flip', end > 60);
+    legend.innerHTML = after
+      ? '<b>q1</b> loads the list. <b>q2</b> loads every row\'s details in one batch.'
+      : '<b>q1</b> loads the list. <b>q2 to q13</b> run once per row, each waiting for the last.';
     rq.textContent = data.length;
-    rp.textContent = mode==='after' ? 'batched' : 'N + 1';
-    rl.textContent = mode==='after' ? 'low' : 'high';
-    bBefore.setAttribute('aria-pressed', String(mode!=='after'));
-    bAfter.setAttribute('aria-pressed', String(mode==='after'));
+    rp.textContent = after ? 'batched' : 'N + 1';
+    rl.textContent = after ? 'low' : 'high';
+    bBefore.setAttribute('aria-pressed', String(!after));
+    bAfter.setAttribute('aria-pressed', String(after));
   }
   bBefore.addEventListener('click', function(){ render('before'); });
   bAfter.addEventListener('click', function(){ render('after'); });
-  setTimeout(function(){ render('before'); }, 250);
+  render('before');
 
   // ---- scroll reveal ----
   var els = document.querySelectorAll('.rv');
