@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Six Months Building Fleetcore — Vyankatesh Sabu</title>
+<meta name="description" content="What I built at Fleetway, what broke, and what it taught me: an offline-first driver app, a finance ledger, fuel planning, an LLM document pipeline, zero-downtime deploys and an AI agent.">
+<meta property="og:title" content="Six Months Building Fleetcore">
+<meta property="og:description" content="What I built at Fleetway, what broke, and what it taught me.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://vrsabu.in/fleetway/">
+<meta property="article:published_time" content="2026-11-04">
+<link rel="canonical" href="https://vrsabu.in/fleetway/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ---------- tokens (same as the homepage) ---------- */
+:root{
+  --paper:#EDEFF2;
+  --panel:#FFFFFF;
+  --ink:#10141A;
+  --body:#2B323C;
+  --graphite:#646D79;
+  --hairline:#D4D9E0;
+  --indigo:#2D2BD6;
+  --amber:#D08A12;
+  --green:#0F7A55;
+  --shadow:0 1px 2px rgba(16,20,26,.05), 0 8px 24px -16px rgba(16,20,26,.28);
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+  --display:"Bricolage Grotesque","IBM Plex Sans",system-ui,sans-serif;
+  --pad:clamp(1rem,4vw,3.5rem);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:17px;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+  background-image:linear-gradient(var(--hairline) 1px,transparent 1px),linear-gradient(90deg,var(--hairline) 1px,transparent 1px);
+  background-size:72px 72px;background-position:-1px -1px;
+}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(120% 80% at 50% 0%,transparent 30%,var(--paper) 78%);pointer-events:none;z-index:0}
+a{color:var(--indigo);text-decoration-thickness:1px;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--indigo);outline-offset:3px;border-radius:2px}
+
+/* ---------- status bar ---------- */
+.statusbar{
+  position:sticky;top:0;z-index:40;background:rgba(237,239,242,.86);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--hairline);
+}
+.statusbar .inner{
+  max-width:1140px;margin:0 auto;padding:.55rem var(--pad);
+  display:flex;align-items:center;gap:1.25rem;
+  font-family:var(--mono);font-size:.75rem;color:var(--graphite);
+}
+.statusbar a{color:var(--graphite);text-decoration:none}
+.statusbar a:hover{color:var(--indigo)}
+.statusbar .home{color:var(--ink);font-weight:500}
+.statusbar nav{margin-left:auto;display:flex;gap:1.1rem}
+@media(max-width:560px){.statusbar nav{display:none}}
+
+/* ---------- article ---------- */
+.wrap{position:relative;z-index:1;max-width:1140px;margin:0 auto;padding:0 var(--pad)}
+article{
+  max-width:46rem;margin:clamp(1.5rem,5vw,3.5rem) auto clamp(2rem,6vw,4rem);
+  background:var(--panel);border:1px solid var(--hairline);border-radius:3px;box-shadow:var(--shadow);
+  padding:clamp(1.5rem,5vw,3.5rem) clamp(1.25rem,5vw,3.75rem);
+}
+.eyebrow{
+  font-family:var(--mono);font-size:.6875rem;font-weight:600;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--graphite);margin:0;
+}
+h1{
+  font-family:var(--display);font-weight:800;
+  font-size:clamp(2.1rem,6.5vw,3.4rem);line-height:1;letter-spacing:-.035em;
+  margin:.85rem 0 1rem;
+}
+.standfirst{font-size:1.1875rem;line-height:1.55;color:var(--graphite);margin:0 0 1.5rem;max-width:36ch}
+.meta{
+  display:flex;flex-wrap:wrap;gap:.35rem 1.25rem;padding:.8rem 0;margin-bottom:.5rem;
+  border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline);
+  font-family:var(--mono);font-size:.75rem;color:var(--graphite);
+}
+.meta b{color:var(--ink);font-weight:500}
+
+.toc{margin:1.75rem 0 .5rem;padding:1rem 1.2rem;background:#F6F7F9;border:1px solid var(--hairline);border-radius:2px}
+.toc p{font-family:var(--mono);font-size:.6875rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--graphite);margin:0 0 .5rem}
+.toc ol{margin:0;padding-left:1.4rem;font-size:.9375rem;line-height:1.6}
+.toc li::marker{font-family:var(--mono);font-size:.8125rem;color:var(--graphite)}
+.toc a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--hairline)}
+.toc a:hover{color:var(--indigo);border-color:var(--indigo)}
+
+article h2{
+  font-family:var(--display);font-weight:700;font-size:clamp(1.4rem,3.6vw,1.75rem);
+  letter-spacing:-.025em;line-height:1.15;margin:3rem 0 1rem;scroll-margin-top:4rem;
+}
+article h2 .n{font-family:var(--mono);font-size:.75rem;font-weight:600;letter-spacing:.06em;color:var(--amber);display:block;margin-bottom:.35rem}
+article p,article li{color:var(--body)}
+article p{margin:0 0 1.1rem}
+article ul,article ol.steps{margin:0 0 1.25rem;padding-left:1.3rem}
+article li{margin-bottom:.45rem}
+article li::marker{color:var(--graphite)}
+article b,article strong{color:var(--ink);font-weight:600}
+.lead{font-weight:600;color:var(--ink)}
+
+.lesson{
+  margin:1.75rem 0;padding:.9rem 1.1rem;border-left:3px solid var(--amber);background:rgba(208,138,18,.07);
+  font-family:var(--display);font-weight:700;font-size:1.1875rem;letter-spacing:-.015em;line-height:1.35;color:var(--ink);
+}
+.lesson span{display:block;font-family:var(--sans);font-weight:400;font-size:.9375rem;letter-spacing:0;color:var(--body);margin-top:.35rem;line-height:1.55}
+
+.figures{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin:1.5rem 0;
+  background:var(--hairline);border:1px solid var(--hairline);border-radius:3px;overflow:hidden;
+}
+@media(max-width:560px){.figures{grid-template-columns:1fr}}
+.figures div{background:var(--panel);padding:.9rem 1rem}
+.figures b{display:block;font-family:var(--display);font-weight:800;font-size:1.5rem;letter-spacing:-.03em;line-height:1.05;color:var(--ink)}
+.figures span{display:block;font-family:var(--mono);font-size:.6875rem;line-height:1.45;color:var(--graphite);margin-top:.35rem}
+
+.subhead{font-family:var(--display);font-weight:700;font-size:1.125rem;letter-spacing:-.015em;color:var(--ink);margin:1.75rem 0 .5rem}
+
+.takeaways{list-style:none;padding:0 !important;margin:1.25rem 0 1.75rem !important;border-top:1px solid var(--hairline)}
+.takeaways li{padding:.85rem 0;border-bottom:1px solid var(--hairline);margin:0}
+.takeaways li b{display:block;font-family:var(--display);font-weight:700;font-size:1.0625rem;letter-spacing:-.01em}
+
+.signoff{margin-top:2.5rem;padding-top:1.5rem;border-top:1px solid var(--hairline);display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center;justify-content:space-between}
+.signoff p{margin:0;font-family:var(--mono);font-size:.75rem;color:var(--graphite)}
+.btn{
+  font-family:var(--mono);font-size:.8125rem;font-weight:500;
+  padding:.6rem 1rem;border:1px solid var(--ink);border-radius:2px;
+  background:var(--ink);color:var(--paper);text-decoration:none;display:inline-block;
+  transition:transform .15s ease;
+}
+.btn:hover{transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){.btn:hover{transform:none}}
+
+footer{position:relative;z-index:1;max-width:1140px;margin:0 auto;border-top:1px solid var(--hairline);padding:1.5rem var(--pad) 2.5rem;
+  font-family:var(--mono);font-size:.6875rem;color:var(--graphite);
+  display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+footer a{color:var(--graphite)}
+</style>
+</head>
+<body>
+
+<div class="statusbar">
+  <div class="inner">
+    <a class="home" href="/">← Vyankatesh Sabu</a>
+    <nav>
+      <a href="/#systems">Systems</a>
+      <a href="/#log">Experience</a>
+      <a href="/#writing">Writing</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</div>
+
+<div class="wrap">
+<article>
+
+  <p class="eyebrow">Writing · Experience</p>
+  <h1>Six Months Building Fleetcore</h1>
+  <p class="standfirst">What I built at Fleetway, what broke, and what it taught me about owning software people depend on.</p>
+  <div class="meta">
+    <span><b>Vyankatesh Sabu</b></span>
+    <span>4 Nov 2026</span>
+    <span>12 min read</span>
+  </div>
+
+  <nav class="toc" aria-label="Contents">
+    <p>Contents</p>
+    <ol>
+      <li><a href="#crud">I expected CRUD</a></li>
+      <li><a href="#purchase-orders">Learning the business through purchase orders</a></li>
+      <li><a href="#cashbook">Owning a finance module</a></li>
+      <li><a href="#fuel">The week I learned to distrust zero</a></li>
+      <li><a href="#documents">Teaching a model to read a passport</a></li>
+      <li><a href="#fleetapp">From the database to the driver's phone</a></li>
+      <li><a href="#deploys">Deploying without anyone noticing</a></li>
+      <li><a href="#more">An agent, a video platform and a product in six days</a></li>
+      <li><a href="#takeaways">What I'm taking away</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="crud"><span class="n">01</span>I expected CRUD</h2>
+  <p>On 18 May 2026 I joined Fleetway as a backend intern. I assumed I'd spend the summer writing list endpoints and fixing small bugs while someone senior handled the parts that mattered.</p>
+  <p>On my second day I pushed code that changed how a trip moves to its next stage when a driver uploads proof of delivery. Real trucks, real drivers, real money.</p>
+  <p>Fleetway builds fleetcore, a platform that runs long-haul trucking fleets across Southern and Central Africa. A single trip can cross several borders over a week or more. Fleetcore tracks the truck (in fleet language, the "horse"), the trailer, the driver, the load, the fuel, the permits needed at each crossing, and the money spent on the way. Every client gets its own deployment: its own database, its own domain, its own copy of the backend. It's written in Kotlin and Spring Boot, on PostgreSQL, behind Traefik on a VPS.</p>
+  <p>Six months later, this is the story of what I built and what it taught me.</p>
+
+  <h2 id="purchase-orders"><span class="n">02</span>Learning the business through purchase orders</h2>
+  <p>My first real feature was subsistence purchase orders: the daily allowance a driver gets for food and lodging on a long trip. It sounds simple until you learn that the amount depends on the route, the client's rates, how many days the trip runs and when the previous trip ended. I built the CRUD, then automated generation for regular trips, then an endpoint that shows exactly how each amount was calculated, because the finance team kept asking.</p>
+  <p>Contractor POs came next, then organisation rates, supplier dashboards, fuel rate history across 60 months and PDF and Excel exports for everything. None of it was glamorous. All of it taught me the business. By the end of May I could explain why a border PO needs to know which side of the border it's on.</p>
+
+  <h2 id="cashbook"><span class="n">03</span>Owning a finance module</h2>
+  <p>In June I was handed something bigger: a cashbook. Field agents carry cash on the road and spend it on tolls, permits and repairs. The company needed every one of those transactions recorded, approved and reconciled.</p>
+  <p>I built the core over two days in mid-June: cashbooks, locations, debit and credit entries, invite-by-link and a hierarchy of admins, agents and sub-agents. Then I spent most of the next two months making it trustworthy.</p>
+  <p>Finance software has one job: the numbers must not lie. So:</p>
+  <ul>
+    <li>Once an entry is posted, it can't be edited or deleted.</li>
+    <li>No entry can be dated before the last posted one, so nobody can quietly rewrite last month.</li>
+    <li>Each user sees only the cashbooks they've been granted, enforced row by row, not just by role.</li>
+    <li>Money moving between two cashbooks, or between a bank and a cashbook, is a single contra transfer, so both sides always agree.</li>
+  </ul>
+  <p>The module grew into a full bank ledger with opening and closing balances, document attachments and date-filtered summaries. It was the first time I owned a system rather than a ticket.</p>
+
+  <h2 id="fuel"><span class="n">04</span>The week I learned to distrust zero</h2>
+  <p>July was my busiest month, and its most important week was spent reading code, not writing it.</p>
+  <p>I'd built a feature for trucks that drive empty to their loading point: the segments before loading should be costed at zero tonnage, since an empty truck burns less fuel. It worked in the fuel totals. Then I noticed the refuel optimiser, the part that decides where to buy fuel and how much, still assumed a full load on every segment. Two parts of the same system disagreed about reality.</p>
+  <p>That sent me through the whole fuel subsystem. There turned out to be three separate calculators plus the optimiser, and three of those four parts had the same quiet flaw. If a route segment had no fuel-consumption data for that truck, the calculator logged a warning and costed it at zero. The result was a total that looked perfectly plausible and was simply wrong.</p>
+  <p>The fix was obvious: throw an error naming every missing segment. The consequence was not. When I tested it, no truck model in the database had complete data for one of the busiest routes. Throwing at trip creation would have blocked every new trip on that route until someone backfilled the data.</p>
+  <p>So I traced who actually used these numbers. Only one action did: generating fuel purchase orders. I moved the calculations there, split "make sure it's calculated" from "make sure it's purchased", and let trips be created freely. The error now fires exactly when the number matters, and never silently.</p>
+  <p>The same week I froze fuel rates and route expenses onto each trip at creation, so editing a route or a supplier later can never change what a past trip cost.</p>
+  <p class="lesson">Make wrong data loud.<span>A crash gets fixed the same day. A number that's quietly wrong gets trusted for months.</span></p>
+
+  <h2 id="documents"><span class="n">05</span>Teaching a model to read a passport</h2>
+  <p>In August I built the part of the platform I'm proudest of technically: document intelligence.</p>
+  <p>Every driver and truck needs a stack of paperwork: passports, driving licences, national ID cards, vehicle registration, road-tax and fitness certificates, COMESA and cross-border permits, police clearance, tax clearance. Ops staff were typing all of it in by hand. I built a pipeline that reads a scan and returns structured fields for ten document types.</p>
+  <p>A few decisions shaped it:</p>
+  <ul>
+    <li><b>Provider-agnostic from day one.</b> Anthropic, OpenAI and Gemini sit behind one interface. Each uses its vendor's native structured-output mode instead of asking politely for JSON, and refusals or truncated answers are caught even though all three vendors return them as HTTP 200.</li>
+    <li><b>One YAML template per document type</b> decides which fields come back, so adding a new document is configuration, not code.</li>
+    <li><b>Files are stored by their SHA-256 hash</b>, and the cache key includes the tenant, document type, template version, provider and model. A template edit or model switch can never serve a stale answer, and two clients sharing a cache can never see each other's passports.</li>
+  </ul>
+  <p>Then I built a rate limiter, and it taught me the second lesson of the internship.</p>
+  <p>My first design was a leaky bucket in an atomic Redis Lua script: requests arriving too fast would wait their turn instead of being rejected, sized so a truck's full set of documents went through in one sitting. It was elegant, and every test of the script passed.</p>
+  <p>Then I load-tested it against the running app. Twelve queued requests each held a database connection while they waited, and the pool only had five. An unrelated endpoint that normally answered in 0.06 seconds took 11 seconds. The rate limiter was protecting one endpoint by stalling the entire application.</p>
+  <p>I rewrote it the same day to refuse instead of queue, with burst tolerance so a truck's documents still went through at once. Measured again:</p>
+  <div class="figures">
+    <div><b>7 / 7</b><span>documents of one truck admitted in a single sitting</span></div>
+    <div><b>12 / 25</b><span>concurrent requests refused in under a second</span></div>
+    <div><b>11s → 0.04s</b><span>unrelated endpoint, before and after the rewrite</span></div>
+  </div>
+  <p class="lesson">Measure before you trust your design.<span>Mine was wrong, and only a real test could show it.</span></p>
+
+  <h2 id="fleetapp"><span class="n">06</span>From the database to the driver's phone</h2>
+  <p>The people fleetcore matters most to are the drivers, and they don't sit at desks. So I built FleetApp, the native Android app they use on the road: live trips and routes, booking proposals, transit documents, load, weight and delivery photos, and daily and monthly earnings. It went into production in October.</p>
+  <p>The defining constraint is the road itself. On these corridors a driver can be without signal for hours. An app that spins or fails offline is useless, so FleetApp is offline-first:</p>
+  <ul>
+    <li>Room is the local source of truth. The app always shows what it last knew, with an offline banner and the last sync time.</li>
+    <li>A photo taken with no signal is queued locally and uploaded by WorkManager once the network returns, surviving the app being closed or killed in between.</li>
+  </ul>
+  <p>Because I also owned the backend, I could shape both sides of every contract, and that turned out to matter most for security.</p>
+  <p>The first version of the app worked out its own driver ID and sent it with every request. That's convenient, but it means the server is trusting the phone. So in August I rebuilt the driver side of the API around a single rule: the server decides who you are. Identity is resolved from the login on every request. Asking for something you don't own returns "not found", so IDs can't be probed. Signed file links expire in five minutes. While doing this I found 21 endpoints with no authorisation check at all, and made the app refuse to start if any endpoint is ever left unguarded again.</p>
+  <p>In September I replaced the single 24-hour login token with short-lived access tokens and single-use refresh tokens, stored in the Android Keystore on the phone. Driver sessions last weeks, not hours, so nobody gets logged out halfway through a long haul. The rollout was backwards compatible: app builds already on drivers' phones kept working until they updated.</p>
+  <p>Owning the app, the API and the security model at the same time taught me more than any one of them would have alone. Every shortcut on one side became a problem on the other.</p>
+
+  <h2 id="deploys"><span class="n">07</span>Deploying without anyone noticing</h2>
+  <p>Every client runs its own copy of the backend, and early on every deploy meant a short outage while the old container stopped and the new JVM booted. In August I designed the zero-downtime deployment the platform now uses, and a teammate rolled it out.</p>
+  <p>The server's memory was tight, so running two full copies of every client permanently wasn't an option. The design is a single-slot blue-green swap:</p>
+  <ol class="steps">
+    <li>Start the new colour beside the old one. Memory peaks at about 1.2 containers, for the 10 to 40 seconds a JVM needs to boot.</li>
+    <li>Both colours share one Traefik service name, so the new container joins the load balancer automatically, with no ports to juggle.</li>
+    <li>Traffic moves only when three health checks agree: Docker's, Spring Boot's and Traefik's own.</li>
+    <li>The old colour shuts down gracefully, finishing in-flight requests within a 30-second window.</li>
+  </ol>
+  <p>The existing auto-updater would have fought the swap, so I replaced it with a small systemd timer that polls for new images on the same schedule and runs the swap safely. One set of templated unit files serves every client.</p>
+  <p>In late October that same script gave me my first real production incident. Several clients' deploy timers fired in the same second, and each started its blue and green JVMs at once: up to eight Spring Boot processes fighting over four CPU cores. The server's load climbed past 13, every health check timed out, and the timers kept retrying the same pile-up. I confirmed the cause by serialising the stuck deploys by hand, and each went healthy on its first try. The fix was one host-wide lock that makes deploys wait in line instead of racing.</p>
+  <p>Along the way I cut CI image pushes from about 230 MB to about 6 MB per change by splitting dependencies into their own Docker layer, and built product-usage dashboards in Grafana (daily and weekly active users, feature usage, per-user errors and latency) entirely from logs the app was already writing.</p>
+
+  <h2 id="more"><span class="n">08</span>An agent, a video platform and a product in six days</h2>
+  <p class="subhead">An agent that can't overstep</p>
+  <p>In September I designed an AI agent that lets users ask fleetcore anything in plain language. The core decision was that the agent gets no permissions of its own: it calls the platform's existing APIs with the user's own token, so every rule that applies to the user applies to the agent automatically.</p>
+  <p>As tools multiplied, sending every tool's schema on every turn got expensive and made the model worse at choosing. So the agent first sees a short glossary of what each group of tools is for, and loads only the schemas it needs. A teammate built the core harness from that design; I then redesigned its tool surface, covering four more areas of the platform while cutting the tool descriptions sent per turn by a quarter. Every step is traced in Langfuse.</p>
+
+  <p class="subhead">Tutorial videos for every client</p>
+  <p>In October I built a way for one admin console to publish training videos to every client's separate deployment. Each client gets a webhook when content changes and pulls the changes itself, with a five-minute reconciliation job as a backstop and signed, DRM-protected playback.</p>
+  <p>I built the first version on Cloudflare R2 with my own ffmpeg transcoding worker. Then the company chose Bunny Stream instead, and I rebuilt the storage layer in a day. The sync protocol survived untouched because I'd kept it independent of where the videos lived.</p>
+
+  <p class="subhead">A whole product in six days</p>
+  <p>In late August I built store-management, a separate inventory system for a fleet's depots: spare parts, consumables and tyres, each consumption linked to a specific truck. At its heart is an append-only stock ledger with exactly one service allowed to write to it, and a test after every scenario asserting that balances equal the sum of movements. Around it: procurement with three-way invoice matching, a full tyre lifecycle across 11 wheel positions, approvals, physical counts and reports, all covered by 150 tests against a real database.</p>
+  <p>Then I made it multi-tenant: one deployment serving many organisations, each with its own database and storage bucket, chosen by a signed claim in the login token rather than by subdomain. Building that, I caught three bugs before they shipped, each of which would have let one customer see another's data. Onboarding a new organisation now takes three commands and no infrastructure changes.</p>
+
+  <h2 id="takeaways"><span class="n">09</span>What I'm taking away</h2>
+  <p>Looking back, the features blur together. The habits don't.</p>
+  <ul class="takeaways">
+    <li><b>Make wrong data loud.</b>A crash gets fixed today. A plausible wrong number gets trusted for months.</li>
+    <li><b>Freeze the past.</b>Rates, expenses and routes are snapshotted onto each trip, and posted entries are locked, so editing today's data never rewrites yesterday's money.</li>
+    <li><b>Measure before you trust a design.</b>My rate limiter and my deploy script were both reasonable on paper and both broke under real load. The test that broke them was the most useful hour of each project.</li>
+    <li><b>Let the server decide.</b>Identity, permissions and tenancy belong on the server, re-checked on every request, never taken from the client.</li>
+    <li><b>Write down what you didn't verify.</b>Many of my commit messages end with exactly what was tested and what wasn't. It makes reviews honest, and it makes the next person's job easier.</li>
+  </ul>
+  <p>I joined expecting to write CRUD for a summer. Instead I learned what it means to own software that people depend on: drivers on a border road with no signal, finance teams closing their books, a server with four cores and too many JVMs.</p>
+  <p>Thank you to my mentor, Abhinav Raj, for trusting an intern with production from the first week, and to the whole Fleetway team for the reviews and the patience.</p>
+
+  <div class="signoff">
+    <p>Vyankatesh Sabu · Backend engineer</p>
+    <a class="btn" href="/">More about my work →</a>
+  </div>
+
+</article>
+</div>
+
+<footer>
+  <span>Vyankatesh Ramprasad Sabu — Backend Engineer</span>
+  <span><a href="mailto:vrsabu545@gmail.com">vrsabu545@gmail.com</a></span>
+</footer>
+
+</body>
+</html>
